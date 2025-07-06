@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Article } from '../types/article';
 
 const ArticleList = () => {
     const [articles, setArticles] = useState<Article[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const data = localStorage.getItem('articles');
@@ -13,7 +15,15 @@ const ArticleList = () => {
 
     return (
         <div className="container mx-auto py-8">
-            <h1 className="text-3xl font-bold mb-6">記事一覧</h1>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">記事一覧</h1>
+                <button
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    onClick={() => navigate('/blogs/new')}
+                >
+                    新規投稿
+                </button>
+            </div>
             {articles.length === 0 ? (
                 <div className="bg-white p-4 rounded shadow text-gray-500 text-center">
                     記事データがありません
