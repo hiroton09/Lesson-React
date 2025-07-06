@@ -1,11 +1,13 @@
 import { useState } from "react";
 import type { User } from "../types/user";
 import { ERROR_MESSAGES } from '../constants/messages';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ onLogin }: { onLogin?: (user: User) => void }) => {
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,6 +18,7 @@ const Login = ({ onLogin }: { onLogin?: (user: User) => void }) => {
             const user = accounts.find((account) => account.id === id && account.pw === pw);
             if (user) {
                 onLogin?.(user);
+                navigate('/blogs');
             } else {
                 setError(ERROR_MESSAGES.E_MSG_001);
             }
