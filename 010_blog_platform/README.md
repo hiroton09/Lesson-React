@@ -59,3 +59,28 @@
 
 ### 2-5. 画面スタイル
 - Tailwind CSSによるスタイル実装
+
+## 9. メモ
+
+### 9-1. Tailwind CSSのセットアップ
+
+**エラー内容**
+「npx tailwindcss init -p」がエラーになる
+
+**原因**
+「npm install -D tailwindcss postcss autoprefixer」でpackage.jsonに追記されるtailwindのバージョンが4.1.11のため
+
+**対処方法**
+以下手順で対応
+
+***node_modules ディレクトリを削除***
+Remove-Item -Path "node_modules" -Recurse -Force
+
+***package-lock.json ファイルを削除***
+Remove-Item -Path "package-lock.json" -Force
+
+***package.json 修正***
+package.jsonに記載するtailwindのバージョンを3.4.3にする
+
+***npm 再インストール***
+npm install
