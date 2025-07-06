@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Login from './pages/Login';
 import ArticleList from './pages/ArticleList';
 import ArticleNew from './pages/ArticleNew';
+import ArticlePage from './pages/ArticlePage';
 import Header from './components/Header';
 import './tailwind.css';
 import type { User } from './types/user';
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/blogs" element={user ? <ArticleList /> : <Navigate to="/login" />} />
         <Route path="/blogs/new" element={user ? <ArticleNew userName={user.name} /> : <Navigate to="/login" />} />
+        <Route path="/blogs/:id" element={user ? <ArticlePage /> : <Navigate to="/login" />} />
         <Route path="/" element={<Navigate to="/blogs" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
