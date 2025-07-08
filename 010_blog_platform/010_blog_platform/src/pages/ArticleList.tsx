@@ -13,6 +13,14 @@ const ArticleList = () => {
         }
     }, []);
 
+    const handleDelete = (id: string) => {
+        if (window.confirm('本当に削除しますか？')) {
+            const newArticles = articles.filter(article => article.id !== id);
+            localStorage.setItem('articles', JSON.stringify(newArticles));
+            setArticles(newArticles);
+        }
+    };
+
     return (
         <div className="container mx-auto py-8">
             <div className="flex justify-between items-center mb-6">
@@ -31,10 +39,23 @@ const ArticleList = () => {
             ) : (
                 <ul className="space-y-4">
                     {articles.map(article => (
-                        <li key={article.id} className="bg-white p-4 rounded shadow hover:bg-gray-100" onClick={() => navigate('/blogs/' + article.id)}>
-                            <div className="font-bold text-lg">{article.title}</div>
-                            <div className="text-sm text-gray-500">カテゴリー: {article.category} / 投稿者: {article.author}</div>
-                            <div className="text-xs text-gray-400">作成日: {article.createdAt} / 更新日: {article.updatedAt}</div>
+                        <li key={article.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
+                            <div onClick={() => navigate('/blogs/' + article.id)} className="flex-1 cursor-pointer">
+                                <div className="font-bold text-lg">{article.title}</div>
+                                <div className="text-sm text-gray-500">カテゴリー: {article.category} / 投稿者: {article.author}</div>
+                                <div className="text-xs text-gray-400">作成日: {article.createdAt} / 更新日: {article.updatedAt}</div>
+                            </div>
+                            <div>
+                                <button 
+                                    className="bg-gray-500 text-white px-6 py-1 mr-2 rounded hover:bg-gray-600"
+                                    onClick={() => navigate('/blogs/' + article.id)}>詳細</button>
+                                <button 
+                                    className="bg-blue-500 text-white px-6 py-1 mr-2 rounded hover:bg-blue-600"
+                                    onClick={() => navigate('/blogs/update/' + article.id)}>編集</button>
+                                <button
+                                    className="bg-red-500 text-white px-6 py-1 rounded hover:bg-red-600"
+                                    onClick={() => handleDelete(article.id)}>削除</button>
+                            </div>
                         </li>
                     ))}
                 </ul>

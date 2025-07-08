@@ -29,7 +29,7 @@ const ArticleNew = ({ userName }: { userName: string }) => {
     return (
         <div className="container mx-auto py-8">
             <h1 className="text-2xl font-bold mb-6">新規記事投稿</h1>
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md max-w-xl mx-auto">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full mx-auto">
                 <div className="mb-4">
                     <label className="block mb-1">タイトル</label>
                     <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full border px-3 py-2 rounded" required />
@@ -48,6 +48,7 @@ const ArticleNew = ({ userName }: { userName: string }) => {
                 </div>
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">投稿</button>
             </form>
+            <button className="mt-8 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => navigate('/blogs')}>一覧に戻る</button>
         </div>
     );
 };
