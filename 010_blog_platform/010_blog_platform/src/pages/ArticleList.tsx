@@ -4,6 +4,8 @@ import type { Article } from '../types/article';
 
 const ArticleList = () => {
     const [articles, setArticles] = useState<Article[]>([]);
+    const [searchTitle, setSearchTitle] = useState('');
+    const [searchCategory, setSearchCategory] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,6 +24,12 @@ const ArticleList = () => {
         }
     };
 
+    // 検索フィルタリング
+    const filteredArticles = articles.filter(article =>
+        article.title.includes(searchTitle) &&
+        article.category.includes(searchCategory)
+    );
+
     return (
         <div className="container mx-auto py-8">
             <div className="flex justify-between items-center mb-6">
@@ -33,13 +41,17 @@ const ArticleList = () => {
                     新規投稿
                 </button>
             </div>
-            {articles.length === 0 ? (
+            <form className='mb-6 flex gap-4'>
+                <input type="text" placeholder='タイトルで検索' value={searchTitle} onChange={e => setSearchTitle(e.target.value)} className="border px-4 py-1 rounted w-1/2" />
+                <input type="text" placeholder='カテゴリーで検索' value={searchCategory} onChange={e => setSearchCategory(e.target.value)} className="border px-4 py-1 rounted w-1/2" />
+            </form>
+            {filteredArticles.length === 0 ? (
                 <div className="bg-white p-4 rounded shadow text-gray-500 text-center">
                     記事データがありません
                 </div>
             ) : (
                 <ul className="space-y-4">
-                    {articles.map(article => (
+                    {filteredArticles.map(article => (
                         <li key={article.id} className="bg-white p-4 rounded shadow flex justify-between items-center">
                             <div onClick={() => navigate('/blogs/' + article.id)} className="flex-1 cursor-pointer">
                                 <div className="font-bold text-lg">{article.title}</div>
@@ -47,10 +59,10 @@ const ArticleList = () => {
                                 <div className="text-xs text-gray-400">作成日: {article.createdAt} / 更新日: {article.updatedAt}</div>
                             </div>
                             <div>
-                                <button 
+                                <button
                                     className="bg-gray-500 text-white px-6 py-1 mr-2 rounded hover:bg-gray-600"
                                     onClick={() => navigate('/blogs/' + article.id)}>詳細</button>
-                                <button 
+                                <button
                                     className="bg-blue-500 text-white px-6 py-1 mr-2 rounded hover:bg-blue-600"
                                     onClick={() => navigate('/blogs/update/' + article.id)}>編集</button>
                                 <button
