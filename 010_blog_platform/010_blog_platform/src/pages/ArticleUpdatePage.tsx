@@ -25,19 +25,21 @@ const ArticleUpdatePage = ({ userName }: { userName: string }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const now = new Date().toISOString();
-        if (article) {
-            const updatedArticle: Article = {
-                ...article,
-                title,
-                category,
-                body,
-                author: userName,
-                updatedAt: now,
-            };
-            const updatedArticles = articles.map(a => a.id === id ? updatedArticle : a);
-            localStorage.setItem('articles', JSON.stringify(updatedArticles));
-            navigate('/blogs/' + id);
+        if (window.confirm('更新しますか？')) {
+            const now = new Date().toISOString();
+            if (article) {
+                const updatedArticle: Article = {
+                    ...article,
+                    title,
+                    category,
+                    body,
+                    author: userName,
+                    updatedAt: now,
+                };
+                const updatedArticles = articles.map(a => a.id === id ? updatedArticle : a);
+                localStorage.setItem('articles', JSON.stringify(updatedArticles));
+                window.alert('更新が完了しました');
+            }
         }
     };
 

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Login from './pages/Login';
 import ArticleList from './pages/ArticleList';
 import ArticleNew from './pages/ArticleNew';
@@ -12,8 +12,23 @@ import type { User } from './types/user';
 function App() {
   const [user, setUser] = useState<User | null>(null);
 
-  const handleLogin = (user: User) => setUser(user);
-  const handleSignOut = () => setUser(null);
+  // ログイン時にユーザー情報を保持
+  useEffect(() => {
+    const saved = localStorage.getItem('loginUser');
+    if (saved) {
+      setUser(JSON.parse(saved));
+    }
+  }, []);
+
+  const handleLogin = (user: User) => {
+    setUser(user);
+    localStorage.setItem('loginUser', JSON.stringify(user));
+  }
+
+  const handleSignOut = () => {
+    setUser(null);
+    localStorage.removeItem('loginUser');
+  }
 
   return (
     <BrowserRouter>

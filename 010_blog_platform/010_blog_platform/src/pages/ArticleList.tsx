@@ -18,6 +18,7 @@ const ArticleList = () => {
             const newArticles = articles.filter(article => article.id !== id);
             localStorage.setItem('articles', JSON.stringify(newArticles));
             setArticles(newArticles);
+            window.alert('削除が完了しました');
         }
     };
 

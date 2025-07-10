@@ -12,7 +12,8 @@ const ArticleNew = ({ userName }: { userName: string }) => {
         e.preventDefault();
         const now = new Date().toISOString();
         const articles: Article[] = JSON.parse(localStorage.getItem('articles') || '[]');
-        const newId = (articles.length + 1).toString();
+        const maxId = articles.length > 0 ? Math.max(...articles.map(a => Number(a.id))) : 0; 
+        const newId = (maxId + 1).toString();
         const newArticle: Article = {
             id: newId,
             title,
@@ -23,7 +24,8 @@ const ArticleNew = ({ userName }: { userName: string }) => {
             updatedAt: now,
         };
         localStorage.setItem('articles', JSON.stringify([newArticle, ...articles]));
-        navigate('/blogs');
+        window.alert('記事が投稿されました');
+        navigate('/blogs/update/' + newId);
     };
 
     return (
