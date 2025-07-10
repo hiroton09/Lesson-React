@@ -29,7 +29,7 @@ const ArticleNew = ({ userName }: { userName: string }) => {
     };
 
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto w-full px-6 py-8">
             <h1 className="text-2xl font-bold mb-6">新規記事投稿</h1>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full mx-auto">
                 <div className="mb-4">

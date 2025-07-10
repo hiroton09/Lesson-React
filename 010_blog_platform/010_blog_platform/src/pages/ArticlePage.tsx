@@ -23,7 +23,7 @@ const ArticlePage = () => {
     }
 
     return (
-        <div className="container mx-auto py-8 max-w-2xl">
+        <div className="container mx-auto py-8 w-full px-6">
             <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
             <div className="mb-2 text-gray-600">カテゴリー: {article.category}</div>
             <div className="mb-2 text-gray-600">投稿者: {article.author}</div>

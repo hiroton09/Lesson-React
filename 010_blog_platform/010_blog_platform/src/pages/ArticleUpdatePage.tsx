@@ -45,7 +45,7 @@ const ArticleUpdatePage = ({ userName }: { userName: string }) => {
 
     if (!article) {
         return (
-            <div className="container mx-auto py-8">
+            <div className="container mx-auto w-full px-6 py-8">
                 <div className="bg-white p-6 rounded shadow text-center text-gray-500">記事が見つかりません</div>
                 <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => navigate('/blogs')}>一覧に戻る</button>
             </div>
@@ -53,7 +53,7 @@ const ArticleUpdatePage = ({ userName }: { userName: string }) => {
     }
 
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto w-full px-6 py-8">
             <h1 className="text-2xl font-bold mb-6">記事編集</h1>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full mx-auto">
                 <div className="mb-4">
