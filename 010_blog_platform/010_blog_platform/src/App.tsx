@@ -20,11 +20,13 @@ function App() {
     }
   }, []);
 
+  // ログイン処理
   const handleLogin = (user: User) => {
     setUser(user);
     localStorage.setItem('loginUser', JSON.stringify(user));
   }
 
+  // サインアウト処理
   const handleSignOut = () => {
     setUser(null);
     localStorage.removeItem('loginUser');
