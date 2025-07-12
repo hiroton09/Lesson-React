@@ -88,7 +88,7 @@ npm install
 ## 10. 完成画面
 
 ### ■ ログイン画面
-<img width="1918" height="876" alt="image" src="https://github.com/user-attachments/assets/4d62000f-29dc-4572-aa5b-60442bda5c32" />
+<img width="1919" height="876" alt="image" src="https://github.com/user-attachments/assets/4d62000f-29dc-4572-aa5b-60442bda5c32" />
 
 ### ■ 一覧画面
 <img width="1919" height="872" alt="image" src="https://github.com/user-attachments/assets/424bb344-d9b5-42f7-a44e-2e747a9d17b4" />
