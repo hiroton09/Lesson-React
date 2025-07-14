@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CalendarHeader from "../components/CalendarHeader";
+import CalendarView from "../components/CalendarView";
 import { getSunday, getCurrentWeekSunday } from "../utils/dateUtils";
 
 const CalendarPage: React.FC = () => {
@@ -88,8 +89,14 @@ const CalendarPage: React.FC = () => {
     setView(v);
   };
 
+  // 仮のスケジュールデータ
+  const schedules = [
+    { id: 1, title: "打合せ", fromDate: `${year}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`, toDate: `${year}-${String(month).padStart(2,'0')}-${String(date).padStart(2,'0')}`, fromTime: "00:00", toTime: "12:00", category: 1, body: '打ち合わせ', author: "admin" },
+    { id: 2, title: "会議", fromDate: `${year}-${String(month).padStart(2,'0')}-${String(date+2).padStart(2,'0')}`, toDate: `${year}-${String(month).padStart(2,'0')}-${String(date+2).padStart(2,'0')}`, fromTime: "01:00", toTime: "02:00", category: 2, body: '開発作業', author: "test"},
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="mx-auto p-4">
       <CalendarHeader
         view={view}
         onChangeView={handleChangeView}
@@ -97,7 +104,14 @@ const CalendarPage: React.FC = () => {
         onNext={handleNext}
         label={getLabel()}
       />
-      {/* 他のコンポーネント（CategoryFilter, CalendarViewなど）をここに追加予定 */}
+      <CalendarView
+        year={year}
+        month={month}
+        date={date}
+        view={view}
+        schedules={schedules}
+      />
+      {/* 他のコンポーネント（CategoryFilterなど）をここに追加予定 */}
     </div>
   );
 };

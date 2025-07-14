@@ -57,6 +57,19 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+#root {
+  width: 100%;
+}
+
+.calendar-week-grid {
+  height: calc(100vh - 120px);
+}
+.calendar-week-cell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
