@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { Schedule } from "../types/schedule";
 
 interface ScheduleModalProps {
   schedule: Schedule;
   onClose: () => void;
+  onSave: (id: number, newData: Partial<Schedule>) => void;
+  onDelete: (id: number) => void;
 }
 
-const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose }) => {
+const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose, onSave, onDelete }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editData, setEditData] = useState({
     title: schedule.title,
@@ -19,12 +21,48 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose }) => {
     author: schedule.author,
   });
 
+  useEffect(() => {
+    // スケジュールが更新されたらeditDataも更新
+    setEditData({
+      title: schedule.title,
+      category: schedule.category,
+      fromDate: schedule.fromDate,
+      fromTime: schedule.fromTime,
+      toDate: schedule.toDate,
+      toTime: schedule.toTime,
+      body: schedule.body,
+      author: schedule.author,
+    });
+  }, [schedule]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setEditData({ ...editData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "category") {
+      setEditData({ ...editData, category: Number(value) });
+    } else {
+      setEditData({ ...editData, [name]: value });
+    }
   };
 
   const handleEditClick = () => setIsEdit(true);
   const handleCancelEdit = () => setIsEdit(false);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (window.confirm('変更内容を保存しますか？')) {
+      onSave(schedule.id, editData);
+      setIsEdit(false);
+      onClose(); // 保存後にモーダルを閉じる
+    }
+  };
+
+  const handleDelete = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (window.confirm('本当に削除しますか？')) {
+      onDelete(schedule.id);
+      onClose();
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -39,11 +77,11 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose }) => {
             <div className="mb-2 text-xs text-gray-400">作成者: {schedule.author}</div>
             <div className="flex gap-2 mt-4">
               <button className="px-4 py-1 bg-blue-500 text-white rounded" onClick={handleEditClick}>編集</button>
-              <button className="px-4 py-1 bg-red-500 text-white rounded">削除</button>
+              <button className="px-4 py-1 bg-red-500 text-white rounded" onClick={handleDelete}>削除</button>
             </div>
           </>
         ) : (
-          <form className="space-y-3">
+          <form className="space-y-3" onSubmit={handleSave}>
             <p>タイトル</p>
             <input name="title" value={editData.title} onChange={handleChange} className="w-full border rounded px-2 py-1" placeholder="タイトル" />
             <p>カテゴリー</p>

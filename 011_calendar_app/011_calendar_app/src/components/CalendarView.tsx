@@ -8,11 +8,13 @@ interface CalendarViewProps {
   date: number;
   view: 'week' | 'month' | 'year';
   schedules: Schedule[];
+  onSave: (id: number, newData: Partial<Schedule>) => void;
+  onDelete: (id: number) => void;
 }
 
 const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
-const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules }) => {
+const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules, onSave, onDelete }) => {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
 
   // 週表示用: 日曜から土曜までの日付を計算
@@ -63,7 +65,12 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
           })}
         </div>
         {selectedSchedule && (
-          <ScheduleModal schedule={selectedSchedule} onClose={handleCloseModal} />
+          <ScheduleModal
+            schedule={selectedSchedule}
+            onClose={handleCloseModal}
+            onSave={onSave}
+            onDelete={onDelete}
+          />
         )}
       </>
     );
