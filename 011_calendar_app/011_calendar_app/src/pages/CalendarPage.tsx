@@ -1,10 +1,35 @@
 import React, { useState } from "react";
 import CalendarHeader from "../components/CalendarHeader";
 import CalendarView from "../components/CalendarView";
+import ScheduleCreateModal from "../components/ScheduleCreateModal";
 import type { Schedule } from "../types/schedule";
 import { getSunday, getCurrentWeekSunday } from "../utils/dateUtils";
 
 const CalendarPage: React.FC = () => {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  // 新規作成用の初期値
+  const emptySchedule = {
+    id: -1,
+    title: '',
+    category: 1,
+    fromDate: '',
+    fromTime: '',
+    toDate: '',
+    toTime: '',
+    body: '',
+    author: ''
+  };
+
+  const handleCreateSchedule = () => setShowCreateModal(true);
+  const handleCloseCreateModal = () => setShowCreateModal(false);
+  const handleRegisterSchedule = (newData: Omit<Schedule, 'id'>) => {
+    setSchedules(prev => [
+      ...prev,
+      { ...newData, id: prev.length > 0 ? Math.max(...prev.map(s => s.id)) + 1 : 1 }
+    ]);
+    setShowCreateModal(false);
+  };
   // 年選択時のハンドラ
   const handleYearSelect = (selectedYear: number) => {
     setYear(selectedYear);
@@ -137,6 +162,7 @@ const CalendarPage: React.FC = () => {
         onPrev={handlePrev}
         onNext={handleNext}
         label={getLabel()}
+        onCreateSchedule={handleCreateSchedule}
       />
       <CalendarView
         year={year}
@@ -148,6 +174,13 @@ const CalendarPage: React.FC = () => {
         onDelete={handleDeleteSchedule}
         onYearSelect={handleYearSelect}
       />
+      {showCreateModal && (
+        <ScheduleCreateModal
+          schedule={emptySchedule}
+          onClose={handleCloseCreateModal}
+          onRegister={handleRegisterSchedule}
+        />
+      )}
       {/* 他のコンポーネント（CategoryFilterなど）をここに追加予定 */}
     </div>
   );
