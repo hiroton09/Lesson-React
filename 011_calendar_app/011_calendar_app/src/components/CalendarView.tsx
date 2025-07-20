@@ -29,6 +29,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
   if (view === 'year') {
     // 9個の年を3x3で表示、ページネーション対応
     const years = Array.from({ length: 9 }, (_, i) => yearPageStart + i);
+    const today = new Date();
+    const thisYear = today.getFullYear();
     return (
       <div className="h-[calc(100vh-120px)] flex flex-col items-center justify-center">
         <div className="flex justify-between items-center w-full max-w-lg mb-4 bg-green-100 p-4 rounded">
@@ -50,7 +52,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
           {years.map((y) => (
             <button
               key={y}
-              className={`border-1 border-gray-300 rounded p-8 text-2xl font-bold transition-colors ${y === year ? 'bg-blue-200 text-blue-800' : 'bg-white hover:bg-blue-50'}`}
+              className={`border-2 rounded p-8 text-2xl font-bold transition-colors ${y === year ? 'bg-blue-200 text-blue-800' : 'bg-white hover:bg-blue-50'} ${y === thisYear ? 'border-green-500' : 'border-gray-400'}`}
               onClick={() => handleYearClick(y)}
             >
               {y}
@@ -81,14 +83,17 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
 
   if (view === 'week') {
     const weekDates = getWeekDates();
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     return (
       <>
         <div className="grid grid-cols-7 gap-2 mt-6 calendar-week-grid">
           {weekDates.map((d, idx) => {
             const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
             const daySchedules = schedules.filter(s => s.fromDate === dateStr);
+            const isToday = dateStr === todayStr;
             return (
-              <div key={idx} className="border rounded p-2 bg-white calendar-week-cell">
+              <div key={idx} className={`border rounded p-2 bg-white calendar-week-cell ${isToday ? 'border-green-500 border-2' : ''}`}>
                 <div className="font-bold text-center mb-2 py-1 bg-green-100 rounded">{daysOfWeek[d.getDay()]}<br />{d.getMonth()+1}/{d.getDate()}</div>
                 <ul className="mt-2">
                   {daySchedules.length === 0 ? (
@@ -153,6 +158,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
     for (let i = 0; i < days.length; i += 7) {
       weeks.push(days.slice(i, i + 7));
     }
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     return (
       <>
         <div className="h-[calc(100vh-120px)] flex flex-col">
@@ -163,10 +170,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
             {days.map((d, idx) => {
               const dateStr = `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.date).padStart(2, '0')}`;
               const daySchedules = schedules.filter(s => s.fromDate === dateStr);
+              const isToday = dateStr === todayStr;
               return (
                 <div
                   key={idx}
-                  className={`border rounded p-2 bg-white calendar-month-cell flex flex-col ${!d.isCurrentMonth ? 'text-gray-400 bg-gray-100' : ''}`}
+                  className={`border rounded p-2 bg-white calendar-month-cell flex flex-col ${!d.isCurrentMonth ? 'text-gray-400 bg-gray-100' : ''} ${isToday ? 'border-green-500 border-2' : ''}`}
                   style={{ minHeight: 0 }}
                 >
                   <div className="font-bold text-center mb-2 py-1 rounded">{d.month}/{d.date}</div>
