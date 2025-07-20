@@ -172,6 +172,17 @@ const CalendarPage: React.FC = () => {
     setSchedules(prev => prev.filter(s => s.id !== id));
   };
 
+  // 月viewで日付クリック時の週遷移
+  const handleDaySelect = (y: number, m: number, d: number) => {
+    // その日を含む週の日曜を求める
+    const clicked = new Date(y, m - 1, d);
+    const sunday = getSunday(clicked);
+    setYear(sunday.getFullYear());
+    setMonth(sunday.getMonth() + 1);
+    setDate(sunday.getDate());
+    setView('week');
+  };
+
   return (
     <div className="mx-auto p-4">
       <CalendarHeader
@@ -192,6 +203,7 @@ const CalendarPage: React.FC = () => {
         onSave={handleSaveSchedule}
         onDelete={handleDeleteSchedule}
         onYearSelect={handleYearSelect}
+        onDaySelect={handleDaySelect}
       />
       {showCreateModal && (
         <ScheduleCreateModal

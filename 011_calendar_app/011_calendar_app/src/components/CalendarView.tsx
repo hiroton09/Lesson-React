@@ -11,11 +11,12 @@ interface CalendarViewProps {
   onSave: (id: number, newData: Partial<Schedule>) => void;
   onDelete: (id: number) => void;
   onYearSelect?: (year: number) => void;
+  onDaySelect?: (year: number, month: number, date: number) => void;
 }
 
 const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
-const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules, onSave, onDelete, onYearSelect }) => {
+const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules, onSave, onDelete, onYearSelect, onDaySelect }) => {
   // 年viewのページネーション用: 9年セットの先頭年
   const [yearPageStart, setYearPageStart] = useState<number>(year - (year % 9));
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
@@ -171,17 +172,23 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
               const dateStr = `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.date).padStart(2, '0')}`;
               const daySchedules = schedules.filter(s => s.fromDate === dateStr);
               const isToday = dateStr === todayStr;
+              const handleDayClick = () => {
+                if (d.isCurrentMonth && typeof onDaySelect === 'function') {
+                  onDaySelect(d.year, d.month, d.date);
+                }
+              };
               return (
                 <div
                   key={idx}
-                  className={`border rounded p-2 bg-white calendar-month-cell flex flex-col ${!d.isCurrentMonth ? 'text-gray-400 bg-gray-100' : ''} ${isToday ? 'border-green-500 border-2' : ''}`}
+                  className={`border rounded p-2 bg-white calendar-month-cell flex flex-col ${!d.isCurrentMonth ? 'text-gray-400 bg-gray-100' : ''} ${isToday ? 'border-green-500 border-2' : ''} ${d.isCurrentMonth ? 'cursor-pointer hover:bg-green-50' : ''}`}
                   style={{ minHeight: 0 }}
+                  onClick={handleDayClick}
                 >
                   <div className="font-bold text-center mb-2 py-1 rounded">{d.month}/{d.date}</div>
                   <ul className="mt-2 flex-1 overflow-y-auto">
                     {daySchedules.length === 0 ? null :
                       daySchedules.map(s => (
-                        <li key={s.id} className="text-xs mb-1 bg-blue-100 rounded px-2 py-1 cursor-pointer" onClick={() => handleItemClick(s)}>
+                        <li key={s.id} className="text-xs mb-1 bg-blue-100 rounded px-2 py-1 cursor-pointer" onClick={e => { e.stopPropagation(); handleItemClick(s); }}>
                           {s.title}
                         </li>
                       ))
