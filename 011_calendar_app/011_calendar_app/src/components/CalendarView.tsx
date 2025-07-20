@@ -10,12 +10,56 @@ interface CalendarViewProps {
   schedules: Schedule[];
   onSave: (id: number, newData: Partial<Schedule>) => void;
   onDelete: (id: number) => void;
+  onYearSelect?: (year: number) => void;
 }
 
 const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
-const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules, onSave, onDelete }) => {
+const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, schedules, onSave, onDelete, onYearSelect }) => {
+  // 年viewのページネーション用: 9年セットの先頭年
+  const [yearPageStart, setYearPageStart] = useState<number>(year - (year % 9));
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  // 年が選択された場合のハンドラ
+  const handleYearClick = (y: number) => {
+    if (onYearSelect) {
+      onYearSelect(y);
+    }
+  };
+
+  if (view === 'year') {
+    // 9個の年を3x3で表示、ページネーション対応
+    const years = Array.from({ length: 9 }, (_, i) => yearPageStart + i);
+    return (
+      <div className="h-[calc(100vh-120px)] flex flex-col items-center justify-center">
+        <div className="flex justify-between items-center w-full max-w-lg mb-4 bg-green-100 p-4 rounded">
+          <button
+            className="px-4 py-2 rounded hover:bg-green-300"
+            onClick={() => setYearPageStart(prev => prev - 9)}
+          >
+            ＜
+          </button>
+          <span className="text-lg font-bold">{years[0]}年 ～ {years[8]}年</span>
+          <button
+            className="px-4 py-2 rounded hover:bg-green-300"
+            onClick={() => setYearPageStart(prev => prev + 9)}
+          >
+            ＞
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-4 w-full max-w-lg">
+          {years.map((y) => (
+            <button
+              key={y}
+              className={`border-1 border-gray-300 rounded p-8 text-2xl font-bold transition-colors ${y === year ? 'bg-blue-200 text-blue-800' : 'bg-white hover:bg-blue-50'}`}
+              onClick={() => handleYearClick(y)}
+            >
+              {y}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // 週表示用: 日曜から土曜までの日付を計算
   const getWeekDates = () => {
@@ -76,8 +120,82 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
     );
   }
 
-  // 月・年表示は未実装
-  return <div className="mt-6 text-gray-400">月・年表示は未実装です</div>;
-};
+  if (view === 'month') {
+    // 月の1日が何曜日か
+    const firstDay = new Date(year, month - 1, 1);
+    const firstDayOfWeek = firstDay.getDay();
+    // 月末日
+    const lastDate = new Date(year, month, 0).getDate();
+    // 前月末日
+    const prevLastDate = new Date(year, month - 1, 0).getDate();
+    // 表示する日付配列（42日分: 6週×7日）
+    const days: {date: number, month: number, year: number, isCurrentMonth: boolean}[] = [];
+    // 前月分
+    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+      const d = prevLastDate - i;
+      const prevMonth = month - 1 < 1 ? 12 : month - 1;
+      const prevYear = month - 1 < 1 ? year - 1 : year;
+      days.push({ date: d, month: prevMonth, year: prevYear, isCurrentMonth: false });
+    }
+    // 今月分
+    for (let d = 1; d <= lastDate; d++) {
+      days.push({ date: d, month, year, isCurrentMonth: true });
+    }
+    // 翌月分
+    const nextDays = 42 - days.length;
+    for (let d = 1; d <= nextDays; d++) {
+      const nextMonth = month + 1 > 12 ? 1 : month + 1;
+      const nextYear = month + 1 > 12 ? year + 1 : year;
+      days.push({ date: d, month: nextMonth, year: nextYear, isCurrentMonth: false });
+    }
+    // 週ごとに分割
+    const weeks = [];
+    for (let i = 0; i < days.length; i += 7) {
+      weeks.push(days.slice(i, i + 7));
+    }
+    return (
+      <>
+        <div className="h-[calc(100vh-120px)] flex flex-col">
+          <div className="grid grid-cols-7 gap-2 flex-1 calendar-month-grid">
+            {daysOfWeek.map((d, idx) => (
+              <div key={idx} className="text-center font-bold text-gray-600 py-2 bg-green-100 rounded">{d}</div>
+            ))}
+            {days.map((d, idx) => {
+              const dateStr = `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.date).padStart(2, '0')}`;
+              const daySchedules = schedules.filter(s => s.fromDate === dateStr);
+              return (
+                <div
+                  key={idx}
+                  className={`border rounded p-2 bg-white calendar-month-cell flex flex-col ${!d.isCurrentMonth ? 'text-gray-400 bg-gray-100' : ''}`}
+                  style={{ minHeight: 0 }}
+                >
+                  <div className="font-bold text-center mb-2 py-1 rounded">{d.month}/{d.date}</div>
+                  <ul className="mt-2 flex-1 overflow-y-auto">
+                    {daySchedules.length === 0 ? null :
+                      daySchedules.map(s => (
+                        <li key={s.id} className="text-xs mb-1 bg-blue-100 rounded px-2 py-1 cursor-pointer" onClick={() => handleItemClick(s)}>
+                          {s.title}
+                        </li>
+                      ))
+                    }
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {selectedSchedule && (
+          <ScheduleModal
+            schedule={selectedSchedule}
+            onClose={handleCloseModal}
+            onSave={onSave}
+            onDelete={onDelete}
+          />
+        )}
+      </>
+    );
+  }
+  return null;
+}
 
 export default CalendarView;

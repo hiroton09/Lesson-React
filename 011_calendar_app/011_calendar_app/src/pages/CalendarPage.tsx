@@ -5,6 +5,13 @@ import type { Schedule } from "../types/schedule";
 import { getSunday, getCurrentWeekSunday } from "../utils/dateUtils";
 
 const CalendarPage: React.FC = () => {
+  // 年選択時のハンドラ
+  const handleYearSelect = (selectedYear: number) => {
+    setYear(selectedYear);
+    setMonth(1);
+    setDate(1);
+    setView('month');
+  };
   // 年月日を個別に管理
   const initSunday = getCurrentWeekSunday();
   const [year, setYear] = useState(initSunday.getFullYear());
@@ -139,6 +146,7 @@ const CalendarPage: React.FC = () => {
         schedules={schedules}
         onSave={handleSaveSchedule}
         onDelete={handleDeleteSchedule}
+        onYearSelect={handleYearSelect}
       />
       {/* 他のコンポーネント（CategoryFilterなど）をここに追加予定 */}
     </div>
