@@ -6,6 +6,24 @@ import type { Schedule } from "../types/schedule";
 import { getSunday, getCurrentWeekSunday } from "../utils/dateUtils";
 
 const CalendarPage: React.FC = () => {
+  // 今日ボタン押下時の処理
+  const handleGoToday = () => {
+    const now = new Date();
+    if (view === 'week') {
+      // 今週の日曜
+      const sunday = getSunday(now);
+      setYear(sunday.getFullYear());
+      setMonth(sunday.getMonth() + 1);
+      setDate(sunday.getDate());
+    } else if (view === 'month') {
+      setYear(now.getFullYear());
+      setMonth(now.getMonth() + 1);
+      setDate(now.getDate());
+    } else if (view === 'year') {
+      setYear(now.getFullYear());
+      // 月・日はそのまま
+    }
+  };
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   // 新規作成用の初期値
@@ -163,6 +181,7 @@ const CalendarPage: React.FC = () => {
         onNext={handleNext}
         label={getLabel()}
         onCreateSchedule={handleCreateSchedule}
+        onGoToday={handleGoToday}
       />
       <CalendarView
         year={year}

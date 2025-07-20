@@ -7,9 +7,10 @@ interface CalendarHeaderProps {
     onNext: () => void;
     label: string;
     onCreateSchedule: () => void;
+    onGoToday: () => void;
 }
 
-const CalendarHeader: React.FC<CalendarHeaderProps> = ({ view, onChangeView, onPrev, onNext, label, onCreateSchedule }) => {
+const CalendarHeader: React.FC<CalendarHeaderProps> = ({ view, onChangeView, onPrev, onNext, label, onCreateSchedule, onGoToday }) => {
     return (
         <header className="flex items-center justify-between p-4 border-b bg-white">
             <div className="flex gap-2 mr-4">
@@ -26,6 +27,7 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({ view, onChangeView, onP
                     onClick={() => onChangeView('year')}
                 >年</button>
                 <button className="ml-4 px-4 py-2 bg-blue-500 text-white rounded" onClick={onCreateSchedule}>スケジュール作成</button>
+                <button className="ml-2 px-4 py-2 bg-green-500 text-white rounded" onClick={() => onGoToday()}>本日</button>
             </div>
             <div className="flex items-center gap-2">
                 <button className="px-2 py-1" onClick={onPrev}>&lt;</button>
