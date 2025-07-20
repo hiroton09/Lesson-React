@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CalendarHeader from "../components/CalendarHeader";
+import categories from "../config/categories.json";
 import CalendarView from "../components/CalendarView";
 import ScheduleCreateModal from "../components/ScheduleCreateModal";
 import type { Schedule } from "../types/schedule";
@@ -183,6 +184,12 @@ const CalendarPage: React.FC = () => {
     setView('week');
   };
 
+  // カテゴリー選択状態
+  const [selectedCategories, setSelectedCategories] = useState<number[]>(categories.map(c => c.id));
+
+  // カテゴリーフィルタ適用
+  const filteredSchedules = schedules.filter(s => selectedCategories.includes(s.category));
+
   return (
     <div className="mx-auto p-4">
       <CalendarHeader
@@ -193,13 +200,15 @@ const CalendarPage: React.FC = () => {
         label={getLabel()}
         onCreateSchedule={handleCreateSchedule}
         onGoToday={handleGoToday}
+        selectedCategories={selectedCategories}
+        onChangeCategories={setSelectedCategories}
       />
       <CalendarView
         year={year}
         month={month}
         date={date}
         view={view}
-        schedules={schedules}
+        schedules={filteredSchedules}
         onSave={handleSaveSchedule}
         onDelete={handleDeleteSchedule}
         onYearSelect={handleYearSelect}
@@ -212,7 +221,6 @@ const CalendarPage: React.FC = () => {
           onRegister={handleRegisterSchedule}
         />
       )}
-      {/* 他のコンポーネント（CategoryFilterなど）をここに追加予定 */}
     </div>
   );
 };
