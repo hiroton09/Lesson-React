@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { Schedule } from "../types/schedule";
+import categories from "../config/categories.json";
 
 interface ScheduleModalProps {
   schedule: Schedule;
@@ -35,7 +36,7 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose, onSave
     });
   }, [schedule]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "category") {
       setEditData({ ...editData, category: Number(value) });
@@ -71,7 +72,7 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose, onSave
         {!isEdit ? (
           <>
             <h2 className="text-xl font-bold mb-2">{schedule.title}</h2>
-            <div className="mb-2 text-sm text-gray-600">カテゴリ: {schedule.category}</div>
+            <div className="mb-2 text-sm text-gray-600">カテゴリ: {categories.find(c => c.id === schedule.category)?.name ?? schedule.category}</div>
             <div className="mb-2 text-sm">{schedule.fromDate} {schedule.fromTime} ～ {schedule.toDate} {schedule.toTime}</div>
             <div className="mb-2 text-sm">{schedule.body}</div>
             <div className="mb-2 text-xs text-gray-400">作成者: {schedule.author}</div>
@@ -85,7 +86,11 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({ schedule, onClose, onSave
             <p>タイトル</p>
             <input name="title" value={editData.title} onChange={handleChange} className="w-full border rounded px-2 py-1" placeholder="タイトル" />
             <p>カテゴリー</p>
-            <input name="category" value={editData.category} onChange={handleChange} className="w-full border rounded px-2 py-1" placeholder="カテゴリ" />
+            <select name="category" value={editData.category} onChange={handleChange} className="w-full border rounded px-2 py-1">
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
             <p>From</p>
             <div className="flex gap-2">
               <input name="fromDate" value={editData.fromDate} onChange={handleChange} className="border rounded px-2 py-1 w-1/2" placeholder="開始日" />

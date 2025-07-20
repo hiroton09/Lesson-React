@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { Schedule } from "../types/schedule";
 import ScheduleModal from "./ScheduleModal";
+import categories from "../config/categories.json";
 
 interface CalendarViewProps {
   year: number;
@@ -103,7 +104,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ year, month, date, view, sc
                     daySchedules.map(s => (
                       <li key={s.id} className="text-sm mb-1 bg-blue-100 rounded px-2 py-1 cursor-pointer" onClick={() => handleItemClick(s)}>
                         <div className="font-bold">{s.title}</div>
-                        <div className="text-xs text-gray-600">{s.category}</div>
+                        <div className="text-xs text-gray-600">{categories.find(c => c.id === s.category)?.name ?? s.category}</div>
                         <div className="text-xs">{s.fromTime} - {s.toTime}</div>
                         <div className="text-xs">{s.body}</div>
                       </li>

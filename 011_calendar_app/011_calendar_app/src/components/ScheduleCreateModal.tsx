@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { Schedule } from "../types/schedule";
+import categories from "../config/categories.json";
 
 interface ScheduleCreateModalProps {
     schedule: Omit<Schedule, 'id'> & { id?: number };
@@ -29,7 +30,7 @@ const ScheduleCreateModal: React.FC<ScheduleCreateModalProps> = ({ schedule, onC
         form.body.trim() !== '' &&
         form.author.trim() !== '';
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         if (name === "category") {
             setForm({ ...form, category: Number(value) });
@@ -54,7 +55,11 @@ const ScheduleCreateModal: React.FC<ScheduleCreateModalProps> = ({ schedule, onC
                     <p>タイトル</p>
                     <input name="title" value={form.title} onChange={handleChange} className="w-full border rounded px-2 py-1" placeholder="タイトル" />
                     <p>カテゴリー</p>
-                    <input name="category" value={form.category} onChange={handleChange} className="w-full border rounded px-2 py-1" placeholder="カテゴリ" />
+                    <select name="category" value={form.category} onChange={handleChange} className="w-full border rounded px-2 py-1">
+                        {categories.map(c => (
+                            <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                    </select>
                     <p>From</p>
                     <div className="flex gap-2">
                         <input name="fromDate" value={form.fromDate} onChange={handleChange} className="border rounded px-2 py-1 w-1/2" placeholder="開始日" />
