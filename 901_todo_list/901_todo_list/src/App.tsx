@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+import type { Task } from './type/task.ts'
 
 function App() {
 
-  const [tasks, setTasks] = useState([
-    { id: '0001', title: 'タスク0001', content: '内容0001'},
-    { id: '0002', title: 'タスク0002', content: '内容0002'},
-    { id: '0003', title: 'タスク0003', content: '内容0003'},
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: '0001', title: 'タスク0001', content: '内容0001', completed: false},
+    { id: '0002', title: 'タスク0002', content: '内容0002', completed: false},
+    { id: '0003', title: 'タスク0003', content: '内容0003', completed: false},
   ]);
 
   const [taskTitle, setTaskTitle] = useState('');
@@ -23,7 +24,7 @@ function App() {
 
     const maxId = Math.max(...tasks.map((task) => parseInt(task.id, 10)), 0);
     const newId = (maxId + 1).toString().padStart(4, '0');
-    const newTasks = [...tasks, {id: newId, title: taskTitle, content: taskContent}]
+    const newTasks = [...tasks, {id: newId, title: taskTitle, content: taskContent, completed: false} as Task];
     setTasks(newTasks);
     setTaskTitle('');
     setTaskContent('');
@@ -31,7 +32,14 @@ function App() {
 
   // タスク完了処理
   const handleCompleteTask = (taskId: string) => {
-    const newTasks = tasks.filter((task) => task.id !== taskId);
+    const newTasks: Task[] = tasks.map((task) => {
+      if (task.id === taskId) {
+        const newTask = {...task};
+        newTask.completed = !newTask.completed;
+        return newTask;
+      }
+      return task;
+    });
     setTasks(newTasks);
   }
 
@@ -43,8 +51,10 @@ function App() {
       </section>
       <section>
         <div className="task-form">
-          <input type="text" placeholder="タイトル" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)}/>
-          <textarea placeholder="内容" value={taskContent} onChange={(e) => setTaskContent(e.target.value)}></textarea>
+          <label htmlFor="task-title">＜ タイトル ＞</label>
+          <input type="text" id="task-title" placeholder="タイトル" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)}/>
+          <label htmlFor="task-content">＜ 内容 ＞</label>
+          <textarea id="task-content" placeholder="内容" value={taskContent} onChange={(e) => setTaskContent(e.target.value)}></textarea>
           <button onClick={handleAddTask}>タスクを追加</button>
         </div>
         <table className="task-table">
@@ -58,11 +68,11 @@ function App() {
           </thead>
           <tbody>
             {tasks.map((task) => (
-              <tr key={task.id}>
+              <tr key={task.id} className={task.completed ? 'completed' : ''}>
                 <td>{task.id}</td>
                 <td>{task.title}</td>
                 <td>{task.content}</td>
-                <td><input type="checkbox" onClick={() => handleCompleteTask(task.id)} /></td>
+                <td><input type="checkbox" checked={task.completed} onChange={() => handleCompleteTask(task.id)} /></td>
               </tr>
             ))}
           </tbody>

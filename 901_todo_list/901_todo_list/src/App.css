@@ -41,3 +41,7 @@
   background-color: skyblue;
   color: white;
 }
+
+.completed {
+  background-color: lightgray;
+}
