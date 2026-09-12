@@ -1,0 +1,119 @@
+.app-header {
+    margin: 2rem;
+}
+
+.app-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.item-list {
+    width: 70%;
+    margin-bottom: 2rem;
+}
+
+.item-list h2 {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: .5rem;
+}
+
+.item-list ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.item-list li {
+    width: 40%;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    background-color: blanchedalmond;
+    padding: 1rem;
+}
+
+.item-list button {
+    border: 1px solid lightskyblue;
+    border-radius: 1rem;
+    background-color: white;
+    padding: .75rem 1.5rem;
+    margin-top: 1rem;
+}
+
+.item-list button:hover {
+    border: none;
+    border-radius: 1rem;
+    color: white;
+    background-color: lightskyblue;
+}
+
+.cart {
+    width: 25%;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+    background-color: lightskyblue;
+    color: white;
+    padding: 1rem 1rem 1.5rem;
+    margin-top: 4rem;
+    height: min-content;
+}
+
+.cart h2 {
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.cart ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+    border: 1px solid white;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.cart li {
+    border-bottom: 1px solid white;
+    padding-bottom: .5rem;
+    color: white;
+}
+
+.handle-count {
+    display: flex;
+    gap: 1rem;
+}
+
+.handle-count button {
+    padding: .25rem 1rem;
+    border-radius: .25rem;
+    background-color: lightskyblue;
+    color: white;
+    margin-top: .25rem;
+}
+
+.handle-count .count-minus {
+    border: 2px solid orange;
+}
+
+.handle-count .count-minus:hover {
+    background-color: orange;
+}
+
+.handle-count .count-plus {
+    border: 2px solid blue;
+}
+
+.handle-count .count-plus:hover {
+    background-color: blue;
+}
+
+.totalPrice {
+    margin-top: 1rem;
+    border-bottom: 1px solid white;
+}
